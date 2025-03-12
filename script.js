@@ -37,7 +37,7 @@ Promise.all([
   const colorScale = d3
     .scaleQuantize()
     .domain([0, d3.max(educationData, (d) => d.bachelorsOrHigher)])
-    .range(d3.schemeBlues[9]); // Use a color scheme like Blues
+    .range(d3.schemeBlues[9]);
 
   // Create a path generator
   const path = d3.geoPath();
