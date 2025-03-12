@@ -1,15 +1,24 @@
-// Set up SVG dimensions
+// Set up initial SVG dimensions
 const width = 960;
 const height = 600;
 
-// Create SVG canvas
-const svg = d3
-  .select("body")
-  .append("svg")
-  .attr("width", width)
-  .attr("height", height);
+// Create a responsive container for the SVG
+d3.select("body")
+  .append("div")
+  .attr("id", "chart-container")
+  .style("width", "90%")
+  .style("overflow", "hidden");
 
-// Load data using Promise.all
+// Create SVG canvas inside the container
+const svg = d3
+  .select("#chart-container")
+  .append("svg")
+  .attr("viewBox", `0 0 ${width} ${height}`)
+  .attr("preserveAspectRatio", "xMidYMid meet")
+  .style("width", "100%")
+  .style("height", "auto");
+
+// Load data using Promise.all()
 Promise.all([
   d3.json(
     "https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/counties.json"
@@ -53,6 +62,21 @@ Promise.all([
     .on("mouseover", (event, d) => {
       const countyData = educationData.find((edu) => edu.fips === d.id);
       tooltip.transition().duration(200).style("opacity", 0.9);
+
+      // Ensure tooltip stays within SVG boundaries
+      const tooltipWidth = tooltip.node().offsetWidth;
+      const tooltipHeight = tooltip.node().offsetHeight;
+      const svgRect = svg.node().getBoundingClientRect();
+      let xPos = event.pageX + 20;
+      let yPos = event.pageY - 28;
+
+      if (xPos + tooltipWidth > svgRect.right) {
+        xPos = event.pageX - tooltipWidth - 10;
+      }
+      if (yPos < svgRect.top) {
+        yPos = event.pageY + 10;
+      }
+
       tooltip
         .html(
           `
@@ -60,8 +84,8 @@ Promise.all([
       `
         )
         .attr("data-education", countyData.bachelorsOrHigher)
-        .style("left", `${event.pageX + 20}px`)
-        .style("top", `${event.pageY - 28}px`);
+        .style("left", `${xPos}px`)
+        .style("top", `${yPos}px`);
     })
     .on("mouseout", () => {
       tooltip.transition().duration(500).style("opacity", 0);
@@ -102,4 +126,13 @@ Promise.all([
     .append("div")
     .attr("id", "tooltip")
     .style("opacity", 0);
+
+  // Make SVG responsive on window resize
+  window.addEventListener("resize", () => {
+    const container = d3.select("#chart-container").node();
+    const newWidth = container.getBoundingClientRect().width;
+    const newHeight = (newWidth / width) * height;
+
+    svg.attr("width", newWidth).attr("height", newHeight);
+  });
 });
