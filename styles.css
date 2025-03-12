@@ -1,5 +1,49 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background-color: rgba(78, 142, 142, 0.446);
+}
+
+#title {
+  /* text-align: center; */
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+
+#description {
+  /* text-align: center; */
+  font-size: 1.2em;
+  margin-bottom: 20px;
+}
+
+svg {
+  background-color: rgba(82, 75, 70, 0.185);
+  border-radius: 1rem;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  box-shadow: 0px 0px 15px 5px rgba(0, 0, 0, 0.2);
+}
+
+.county {
+  stroke: #fff;
+  stroke-width: 0.5px;
+}
+
+.county:hover {
+  stroke: black;
+  stroke-width: 1px;
+}
+
+#tooltip {
+  position: absolute;
+  background: #fff;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  pointer-events: none;
+  font-size: 0.9em;
+}
+
+#legend {
+  font-size: 0.8em;
 }
